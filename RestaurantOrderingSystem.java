@@ -17,7 +17,7 @@ public class RestaurantOrderingSystem {
         while (moreCustomers) {
 
             System.out.println("========================================");
-            System.out.println("       WELCOME TO JM RESTAURANT");
+            System.out.println("       WELCOME TO JW RESTAURANT");
             System.out.println("========================================");
 
             // Show menu
@@ -94,3 +94,4 @@ public class RestaurantOrderingSystem {
         sc.close();
     }
 }
+
