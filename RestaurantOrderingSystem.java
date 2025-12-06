@@ -1,8 +1,28 @@
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class RestaurantOrderingSystem {
+
+    // ------- SAFER INTEGER INPUT METHOD -------
+    public static int safeInputInt(Scanner sc, String message) {
+        int value;
+        while (true) {
+            System.out.print(message);
+            try {
+                value = sc.nextInt();
+                if (value < 0) {
+                    System.out.println("Value cannot be negative. Try again.");
+                    continue;
+                }
+                return value;
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input! Please enter a number only.");
+                sc.next(); // clear invalid input
+            }
+        }
+    }
 
     public static void main(String[] args) throws IOException {
 
@@ -32,8 +52,9 @@ public class RestaurantOrderingSystem {
             receipt.append("======== RECEIPT ========\n");
 
             while (ordering) {
-                System.out.print("\nEnter item number to order (0 to finish): ");
-                int choice = sc.nextInt();
+
+                // SAFE INPUT FOR ITEM NUMBER
+                int choice = safeInputInt(sc, "\nEnter item number to order (0 to finish): ");
 
                 if (choice == 0) {
                     ordering = false;
@@ -45,23 +66,20 @@ public class RestaurantOrderingSystem {
                     continue;
                 }
 
-                System.out.print("Enter quantity: ");
-                int qty = sc.nextInt();
+                // SAFE INPUT FOR QUANTITY
+                int qty = safeInputInt(sc, "Enter quantity: ");
 
                 double subTotal = prices[choice - 1] * qty;
                 total += subTotal;
 
-                receipt.append(String.format("%-15s x%d   ₱%.2f\n", 
+                receipt.append(String.format("%-15s x%d   ₱%.2f\n",
                         items[choice - 1], qty, subTotal));
             }
 
             // Discount rule
-            double discount = 0;
-            if (total > 500) {
-                discount = total * 0.10; // 10%
-            }
+            double discount = total > 500 ? total * 0.10 : 0;
 
-            // VAT (bonus feature)
+            // VAT
             double vat = total * 0.12;
 
             double finalTotal = total - discount + vat;
@@ -74,7 +92,7 @@ public class RestaurantOrderingSystem {
             receipt.append(String.format("GRAND TOTAL:     ₱%.2f\n", finalTotal));
             receipt.append("===========================\n");
 
-            // Print receipt on console
+            // Print receipt
             System.out.println("\n\n" + receipt);
 
             // Save to file
@@ -94,4 +112,3 @@ public class RestaurantOrderingSystem {
         sc.close();
     }
 }
-
